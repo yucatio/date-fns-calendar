@@ -10,6 +10,32 @@ import subMonths from 'date-fns/subMonths'
 import startOfMonth from 'date-fns/startOfMonth'
 import endOfMonth from 'date-fns/endOfMonth'
 
+import { makeStyles } from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import Typography from '@material-ui/core/Typography'
+
+const useStyles = makeStyles(theme => ({
+  paper: {
+    margin: theme.spacing(5, 10),
+    padding: theme.spacing(5, 5),
+  },
+  yearmonth: {
+    margin: theme.spacing(2, 0, 1, 0),
+  },
+  tableHead: {
+    color: theme.palette.secondary.contrastText,
+    backgroundColor: theme.palette.secondary.light,
+  },
+}));
+
 const getCalendarArray = date => {
   const sundays = eachWeekOfInterval({
     start: startOfMonth(date),
@@ -22,32 +48,48 @@ const getCalendarArray = date => {
 
 function App() {
   const [targetDate, setTargetDate] = useState(new Date())
+  const classes = useStyles()
   const calendar = getCalendarArray(targetDate)
 
   return (
     <div>
-      <div>
-        <button onClick={() => setTargetDate(current => subMonths(current, 1))}>前の月</button>
-        <button onClick={() => setTargetDate(new Date())}>今月</button>
-        <button onClick={() => setTargetDate(current => addMonths(current, 1))}>次の月</button>
-      </div>
-      {format(targetDate, 'y年M月')}
-      <table>
-        <thead>
-          <tr>
-            <th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th>
-          </tr>
-        </thead>
-        <tbody>
-          {calendar.map((weekRow, rowNum) => (
-            <tr key={rowNum}>
-              {weekRow.map(date => (
-                <td key={getDay(date)}>{getDate(date)}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <CssBaseline />
+      <Paper className={classes.paper}>
+        <Grid container justify="space-between">
+          <Grid item>
+            <Button variant="outlined" onClick={() => setTargetDate(subMonths(targetDate, 1))}>前の月</Button>
+          </Grid>
+          <Grid item>
+            <Button variant="outlined" onClick={() => setTargetDate(new Date())}>今月</Button>
+          </Grid>
+          <Grid item>
+            <Button variant="outlined" onClick={() => setTargetDate(addMonths(targetDate, 1))}>次の月</Button>
+          </Grid>
+        </Grid>
+        <Typography variant="h4" align="center" className={classes.yearmonth}>{format(targetDate, 'y年M月')}</Typography>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center" classes={{head: classes.tableHead, }}>日</TableCell>
+              <TableCell align="center" classes={{head: classes.tableHead, }}>月</TableCell>
+              <TableCell align="center" classes={{head: classes.tableHead, }}>火</TableCell>
+              <TableCell align="center" classes={{head: classes.tableHead, }}>水</TableCell>
+              <TableCell align="center" classes={{head: classes.tableHead, }}>木</TableCell>
+              <TableCell align="center" classes={{head: classes.tableHead, }}>金</TableCell>
+              <TableCell align="center" classes={{head: classes.tableHead, }}>土</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {calendar.map((weekRow, rowNum) => (
+              <TableRow key={rowNum}>
+                {weekRow.map(date => (
+                  <TableCell key={getDay(date)} align="center">{getDate(date)}</TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
     </div>
   )
 }
