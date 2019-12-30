@@ -2,6 +2,7 @@
   "name": "date-fns-calendar",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@material-ui/core": "^4.8.1",
     "@testing-library/jest-dom": "^4.2.4",
