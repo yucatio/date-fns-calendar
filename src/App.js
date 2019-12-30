@@ -2,6 +2,7 @@ import React, { useState }  from 'react'
 import format from 'date-fns/format'
 import getDate from 'date-fns/getDate'
 import getDay from 'date-fns/getDay'
+import isSameDay from 'date-fns/isSameDay'
 import eachDayOfInterval from 'date-fns/eachDayOfInterval'
 import endOfWeek from 'date-fns/endOfWeek'
 import eachWeekOfInterval from 'date-fns/eachWeekOfInterval'
@@ -9,6 +10,7 @@ import addMonths from 'date-fns/addMonths'
 import subMonths from 'date-fns/subMonths'
 import startOfMonth from 'date-fns/startOfMonth'
 import endOfMonth from 'date-fns/endOfMonth'
+import isSameMonth from 'date-fns/isSameMonth'
 
 import { makeStyles } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -21,6 +23,9 @@ import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Typography from '@material-ui/core/Typography'
+import blue from '@material-ui/core/colors/blue'
+import pink from '@material-ui/core/colors/pink'
+import red from '@material-ui/core/colors/red'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -34,7 +39,36 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.secondary.contrastText,
     backgroundColor: theme.palette.secondary.light,
   },
-}));
+}))
+
+const useCalendarCellStyles = makeStyles(theme => ({
+  calendarCell: {
+    color: ({wday, isTargetMonth}) => {
+      if(isTargetMonth) {
+        switch(wday) {
+          case 0: // Sunday
+            return red[500]
+          case 6: // Saturday
+            return blue[500]
+          default:
+            return theme.palette.text.primary
+        }
+      } else {
+        // previous or next month
+        switch(wday) {
+            case 0: // Sunday
+            return red[200]
+          case 6: // Saturday
+            return blue[200]
+          default:
+            return theme.palette.text.secondary
+        }
+      }
+    },
+    backgroundColor: ({isToday}) =>
+      isToday ? pink[50] : "transparent"
+  },
+}))
 
 const getCalendarArray = date => {
   const sundays = eachWeekOfInterval({
@@ -46,10 +80,17 @@ const getCalendarArray = date => {
   )
 }
 
+function CalendarTableCell(props) {
+  const {wday, isTargetMonth, isToday, children, ...other} = props
+  const classes = useCalendarCellStyles(props)
+  return (<TableCell className={classes.calendarCell} {...other}>{children}</TableCell>)
+}
+
 function App() {
   const [targetDate, setTargetDate] = useState(new Date())
   const classes = useStyles()
   const calendar = getCalendarArray(targetDate)
+  const today = new Date()
 
   return (
     <div>
@@ -83,7 +124,9 @@ function App() {
             {calendar.map((weekRow, rowNum) => (
               <TableRow key={rowNum}>
                 {weekRow.map(date => (
-                  <TableCell key={getDay(date)} align="center">{getDate(date)}</TableCell>
+                  <CalendarTableCell key={getDay(date)} wday={getDay(date)} isTargetMonth={isSameMonth(date, targetDate)} isToday={isSameDay(date, today)} align="center">
+                    {getDate(date)}
+                  </CalendarTableCell>
                 ))}
               </TableRow>
             ))}
