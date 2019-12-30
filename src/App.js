@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState }  from 'react'
 import format from 'date-fns/format'
 import getDate from 'date-fns/getDate'
 import getDay from 'date-fns/getDay'
 import eachDayOfInterval from 'date-fns/eachDayOfInterval'
 import endOfWeek from 'date-fns/endOfWeek'
 import eachWeekOfInterval from 'date-fns/eachWeekOfInterval'
+import addMonths from 'date-fns/addMonths'
+import subMonths from 'date-fns/subMonths'
 import startOfMonth from 'date-fns/startOfMonth'
 import endOfMonth from 'date-fns/endOfMonth'
 
@@ -19,11 +21,16 @@ const getCalendarArray = date => {
 }
 
 function App() {
-  const targetDate = new Date()
+  const [targetDate, setTargetDate] = useState(new Date())
   const calendar = getCalendarArray(targetDate)
 
   return (
     <div>
+      <div>
+        <button onClick={() => setTargetDate(current => subMonths(current, 1))}>前の月</button>
+        <button onClick={() => setTargetDate(new Date())}>今月</button>
+        <button onClick={() => setTargetDate(current => addMonths(current, 1))}>次の月</button>
+      </div>
       {format(targetDate, 'y年M月')}
       <table>
         <thead>
