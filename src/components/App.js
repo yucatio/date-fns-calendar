@@ -5,10 +5,11 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import Paper from '@material-ui/core/Paper'
 
 import Calendar from './calendar/'
+import Footer from './Footer'
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    margin: theme.spacing(5, 10),
+    margin: theme.spacing(5, 10, 1, 10),
     padding: theme.spacing(5, 5),
   },
 }))
@@ -22,6 +23,7 @@ function App() {
       <Paper className={classes.paper}>
         <Calendar />
       </Paper>
+      <Footer />
     </div>
   )
 }
