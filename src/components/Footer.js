@@ -13,7 +13,7 @@ function Footer(props) {
         <IconButton aria-label="blog" href="http://yucatio.hatenablog.com/entry/2019/12/23/172547">
           <Tooltip title="blog">
             <DescriptionIcon />
-            </Tooltip>
+          </Tooltip>
         </IconButton>
       </Box>
       <Box>
